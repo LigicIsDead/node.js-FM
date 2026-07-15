@@ -54,14 +54,14 @@ yargs(hideBin(process.argv))
             console.log('Note not found')
         }
     })
-    .command('web [port]', 'launch websire to see notes', yargs => {
+    .command('web [port]', 'launch website to see notes', yargs => {
         return yargs
         .positional('port', {
             describe: 'port to bind on',
             default: 5000,
             type: 'number'
         })
-    }, async (argv) =>{
+    }, async (argv) => {
         const notes = await getAllNotes()
         start(notes, argv.port)
     })
