@@ -1,4 +1,3 @@
-import fs from 'node:fs/promises'
 import http from 'node:http'
 import open from 'open'
 
@@ -21,12 +20,27 @@ const formatNotes = (notes) => {
   }).join('\n')
 }
 
+const HTML_TEMPLATE = `
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes</title>
+  </head>
+  <body>
+    <h1>Notes</h1>
+    <div class="notes">
+      {{notes}}
+    </div>
+  </body>
+</html>
+`
+
 const createServer = (notes) => {
   return http.createServer(async (req, res) => {
-    const HTML_PATH = new URL('./template.html', import.meta.url).pathname
-    const template = await fs.readFile(HTML_PATH, 'utf-8')
-    const html = interpolate(template, {notes: formatNotes(notes)})
-    
+    const html = interpolate(HTML_TEMPLATE, { notes: formatNotes(notes) })
+
     res.writeHead(200, {'Content-Type': 'text/html'});
     res.end(html);
   });
